@@ -1,47 +1,33 @@
-from stats import get_num_words
+from stats import get_num_words, count_characters, chars_dict_to_sorted_list
+import sys
 
 def main():
-    book_path = "books/frankenstein.txt"
+    if len(sys.argv) < 2:
+        print("Usage: python3 main.py <path_to_book>")
+        sys.exit(1)
+    book_path = sys.argv[1]
+
     text = get_book_txt(book_path)
-    words = get_num_words(text)
-    ctrcount = count_characters(text)
-    print("--- Beginning book analysis ---")
-    print("\n")
-    print(f"There are {words} words found in the document")
-    print("\n")
-    character_report(ctrcount)
-    print("\n")
-    print("--- End of book analysis ---")
-
-
-def count_characters(txt):
-    strint = {}
-    compare = ord('a')
-    ctr = 0
-    newtxt = txt.lower()
-    while compare < 123:
-        temp = chr(compare)
-        ctr = newtxt.count(temp)
-        strint[temp] = ctr
-        compare += 1
-        ctr = 0
-    
-    return strint
+    num_words = get_num_words(text)
+    chars_dict = count_characters(text)
+    chars_sorted_list = chars_dict_to_sorted_list(chars_dict)
+    print_report(chars_dict, num_words, chars_sorted_list)
 
 def get_book_txt(path):
     with open(path) as f:
         return f.read()
 
-def sort_on(d):
-    return d["num"]
+def print_report(book_path, num_words, chars_sorted_list):
+    print("============ BOOKBOT ============")
+    print(f"Analyzing book found at {book_path}...")
+    print("----------- Word Count ----------")
+    print(f"Found {num_words} total words")
+    print("--------- Character Count -------")
+    for item in chars_sorted_list:
+        if not item["char"].isalpha():
+            continue
+        print(f"{item['char']}: {item['num']}")
 
-def character_report(dictionary):
-    sorted_list = []
-    for chars in dictionary:
-        sorted_list.append({"char" : chars, "num" : dictionary[chars]})
-    sorted_list.sort(reverse = True, key = sort_on)
-    for i in range(len(sorted_list)):
-        letter = sorted_list[i]['char']
-        number = sorted_list[i]['num']
-        print(f"The '{letter}' character was found {number} times")
+    print("============= END ===============")
+
 main()
