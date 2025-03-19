@@ -1,11 +1,13 @@
+from stats import get_num_words
+
 def main():
     book_path = "books/frankenstein.txt"
     text = get_book_txt(book_path)
-    words = word_count(text)
+    words = get_num_words(text)
     ctrcount = count_characters(text)
     print("--- Beginning book analysis ---")
     print("\n")
-    print(f"There are {words} words found in the book")
+    print(f"There are {words} words found in the document")
     print("\n")
     character_report(ctrcount)
     print("\n")
@@ -29,10 +31,6 @@ def count_characters(txt):
 def get_book_txt(path):
     with open(path) as f:
         return f.read()
-
-def word_count(fc):
-    words = fc.split()
-    return len(words)
 
 def sort_on(d):
     return d["num"]
